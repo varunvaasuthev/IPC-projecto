@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theocracy Quest — Year 6</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --site-primary: #315c50;
+  --site-on-primary: #ffffff;
+  --site-secondary: #f0c66e;
+  --site-on-secondary: #292314;
+  --site-background: #f5f1e7;
+  --site-on-background: #202d29;
+  --site-font-body: ui-rounded, "Trebuchet MS", system-ui, sans-serif;
+  --site-font-heading: ui-rounded, "Trebuchet MS", system-ui, sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--site-font-body); background: var(--site-background); color: var(--site-on-background); }
+#app { min-height: 100vh; width: 100%; border-radius: 0; background-color: var(--site-background); color: var(--site-on-background); padding: calc(24px * var(--site-spacing-scale)); }
+.shell { max-width: 820px; margin: 0 auto; }
+.topline { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
+.brand { display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.02em; }
+.logo { width:42px; height:42px; border-radius:14px; display:grid; place-items:center; background:var(--site-primary); color:var(--site-on-primary); font-size:23px; }
+.pill { border:1px solid color-mix(in srgb, var(--site-on-background) 18%, transparent); border-radius:999px; padding:8px 12px; font-size:13px; font-weight:700; }
+.hero { background:var(--site-primary); color:var(--site-on-primary); border-radius:calc(28px * var(--site-radius-scale)); padding:clamp(24px, 6vw, 48px); position:relative; overflow:hidden; }
+.hero:after { content:'✦'; position:absolute; right:25px; top:5px; font-size:110px; opacity:calc(.10 * var(--site-decoration-opacity)); pointer-events:none; }
+.eyebrow { text-transform:uppercase; font-size:12px; font-weight:900; letter-spacing:.14em; opacity:.8; }
+h1,h2,h3 { font-family:var(--site-font-heading); line-height:1.12; }
+h1 { font-size:calc(clamp(34px, 7vw, 54px) * var(--site-heading-scale)); margin:12px 0; letter-spacing:-.04em; }
+.hero p { max-width:560px; line-height:1.6; opacity:.92; }
+button { font:inherit; cursor:pointer; border:0; border-radius:calc(14px * var(--site-radius-scale)); padding:13px 17px; font-weight:850; transition:transform .12s, filter .12s; }
+button:hover { filter:brightness(1.04); transform:translateY(-1px); }
+button:focus-visible { outline:3px solid #e09b36; outline-offset:3px; }
+.primary-btn { background:var(--site-secondary); color:var(--site-on-secondary); margin-top:14px; }
+.soft-btn { background:color-mix(in srgb, var(--site-primary) 10%, var(--site-background)); color:var(--site-on-background); border:1px solid color-mix(in srgb, var(--site-on-background) 12%, transparent); }
+.info-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 28px; }
+.info { background:color-mix(in srgb, var(--site-primary) 7%, var(--site-background)); border:1px solid color-mix(in srgb, var(--site-on-background) 10%, transparent); border-radius:18px; padding:16px; }
+.info b { display:block; margin-bottom:5px; }
+.info span { font-size:13px; opacity:.8; line-height:1.4; display:block; }
+.panel { background:color-mix(in srgb, var(--site-background) 92%, var(--site-primary)); border:1px solid color-mix(in srgb, var(--site-on-background) 12%, transparent); border-radius:calc(24px * var(--site-radius-scale)); padding:clamp(18px,4vw,32px); margin-top:18px; }
+.progressline { display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:13px; font-weight:800; margin-bottom:12px; }
+.track { height:9px; background:color-mix(in srgb, var(--site-on-background) 12%, transparent); border-radius:999px; overflow:hidden; margin-bottom:25px; }
+.fill { height:100%; width:0; background:var(--site-primary); border-radius:999px; transition:width .25s; }
+.question { font-size:clamp(22px,4vw,30px); margin:0 0 20px; letter-spacing:-.025em; }
+.answers { display:grid; gap:10px; }
+.answer { display:flex; gap:12px; align-items:center; width:100%; text-align:left; background:color-mix(in srgb, var(--site-primary) 5%, var(--site-background)); color:var(--site-on-background); border:1px solid color-mix(in srgb, var(--site-on-background) 16%, transparent); padding:15px; border-radius:15px; font-weight:650; }
+.letter { display:grid; place-items:center; width:30px; height:30px; flex:0 0 30px; border-radius:9px; background:color-mix(in srgb, var(--site-primary) 14%, var(--site-background)); font-size:13px; }
+.answer.correct { border-color:#25835d; background:color-mix(in srgb, #25835d 15%, var(--site-background)); }
+.answer.wrong { border-color:#bd5147; background:color-mix(in srgb, #bd5147 12%, var(--site-background)); }
+.answer:disabled { cursor:default; transform:none; }
+.feedback { margin-top:16px; padding:14px 16px; border-radius:14px; line-height:1.5; display:none; }
+.feedback.show { display:block; }
+.feedback.good { background:color-mix(in srgb, #25835d 13%, var(--site-background)); }
+.feedback.bad { background:color-mix(in srgb, #bd5147 10%, var(--site-background)); }
+.actions { display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; margin-top:18px; }
+.result-score { font-size:clamp(48px,10vw,72px); font-weight:950; letter-spacing:-.06em; margin:8px 0; }
+.result-badge { display:inline-block; background:var(--site-secondary); color:var(--site-on-secondary); padding:8px 12px; border-radius:999px; font-size:13px; font-weight:900; }
+.hidden { display:none !important; }
+.footer { text-align:center; opacity:.7; font-size:12px; margin:22px 0 4px; line-height:1.5; }
+@media(max-width:560px) { .info-grid { grid-template-columns:1fr; } .info { display:flex; align-items:center; gap:12px; } .info b { margin:0; min-width:90px; } }
+@media(prefers-color-scheme:dark) {
+ :root { --site-primary:#24483f; --site-on-primary:#f8fff9; --site-secondary:#f0c66e; --site-on-secondary:#292314; --site-background:#18221f; --site-on-background:#edf3ee; }
+}
+</style>
+</head>
+<body>
+<main id="app" data-sites-preview-theme="custom">
+ <div class="shell">
+  <div class="topline"><div class="brand"><div class="logo">🏛️</div><span>LEARN & PLAY</span></div><div class="pill">YEAR 6 • SOCIAL STUDIES</div></div>
+  <section id="start">
+  <div class="hero"><div class="eyebrow">Mini quiz adventure</div><h1>Theocracy<br>Quest</h1><p>Travel through 10 different questions to discover how a theocracy works. Pick an answer, collect points, and become a government expert!</p><button class="primary-btn" id="startBtn">Start the quest →</button></div>
+   <div class="info-grid"><div class="info"><b>🎯 Your mission</b><span>Answer 10 multiple-choice questions.</span></div><div class="info"><b>⭐ Earn points</b><span>Get 10 points for every correct answer.</span></div><div class="info"><b>🧠 Learn as you go</b><span>Every answer includes a simple explanation.</span></div></div>
+   <div class="panel"><h2 style="margin-top:0">First, what is a theocracy?</h2><p style="line-height:1.65;margin-bottom:0">A <b>theocracy</b> is a system of government where religious leaders rule, or where government authority is closely based on religious beliefs or laws. Different countries and communities organise government in different ways.</p></div>
+  </section>
+  <section id="quiz" class="panel hidden" aria-live="polite">
+   <div class="progressline"><span id="qCount">QUESTION 1 OF 10</span><span id="scoreNow">⭐ 0 points</span></div><div class="track"><div class="fill" id="progress"></div></div>
+   <div class="eyebrow" id="topic">THE BASICS</div><h2 class="question" id="questionText"></h2><div class="answers" id="answers"></div><div id="feedback" class="feedback"></div><div class="actions"><button class="primary-btn hidden" id="nextBtn">Next question →</button></div>
+  </section>
+  <section id="result" class="panel hidden" aria-live="polite"><div class="eyebrow">Quest complete</div><h2 id="resultTitle">Great work!</h2><div class="result-score" id="finalScore">0/100</div><div class="result-badge" id="resultBadge">THEOCRACY EXPLORER</div><p id="resultText" style="line-height:1.65"></p><h3>Remember these key facts</h3><ul style="line-height:1.8"><li>A theocracy connects government authority with religion.</li><li>A theocracy may be led by religious leaders or use religious laws.</li><li>Not every country has a theocracy; governments can be organised in many ways.</li></ul><div class="actions"><button class="soft-btn" id="reviewBtn">Review answers</button><button class="primary-btn" id="againBtn">Play again ↻</button></div></section>
+  <section id="review" class="panel hidden"><h2>Answer review</h2><div id="reviewList"></div><div class="actions"><button class="primary-btn" id="homeBtn">Back to results</button></div></section>
+  <div class="footer">Made for Year 6 learners • Be curious, be respectful, keep learning.</div>
+ </div>
+</main>
+<script>
+const questions = [
+ {topic:'THE BASICS',q:'What is a theocracy?',a:['A government linked closely to religion','A government run only by business owners','A country with no rules','A government chosen by a sports team'],c:0,e:'A theocracy is a system where religious leaders rule or religious beliefs and laws strongly shape government.'},
+ {topic:'WHO LEADS?',q:'Who may hold important power in a theocracy?',a:['Only athletes','Religious leaders','Only shopkeepers','Tourists visiting the country'],c:1,e:'Religious leaders may govern directly or have a major role in how the country is ruled.'},
+ {topic:'LAWS & BELIEFS',q:'In a theocracy, what may influence some government laws?',a:['The latest video game','The weather forecast only','Religious teachings or laws','A random number generator'],c:2,e:'Religious teachings or laws can be an important source for government rules in a theocracy.'},
+ {topic:'COMPARE SYSTEMS',q:'Which statement best describes a democracy?',a:['People have a role in choosing their leaders','Religious leaders must always rule','Nobody is allowed to vote','Every decision is made by a king'],c:0,e:'In a democracy, people have a role in choosing leaders or making decisions, often through elections. Democracies can vary.'},
+ {topic:'SPOT THE EXAMPLE',q:'Which situation sounds most like a theocracy?',a:['Students vote for a class captain','A mayor is elected by local residents','A government is led by religious authorities and uses religious law','A club chooses its team colours'],c:2,e:'The key clue is that religious authorities and religious law are central to government.'},
+ {topic:'THINK CAREFULLY',q:'Is every country governed in the same way?',a:['Yes, all countries are exactly alike','No, countries can have different systems of government','Yes, every country is a theocracy','No, countries never have governments'],c:1,e:'Countries have different political and legal systems. A theocracy is just one type.'},
+ {topic:'RESPECT & FAIRNESS',q:'When learning about a country’s religion and government, what is a good approach?',a:['Make fun of people’s beliefs','Assume everyone thinks the same','Listen respectfully and check reliable facts','Believe every rumour'],c:2,e:'Respectful questions and reliable information help us understand people and systems fairly.'},
+ {topic:'FINAL CHALLENGE',q:'Which sentence is the best summary of a theocracy?',a:['A government where religion has a central role in ruling','A government with no leaders or laws','A government run by children only','A government where sport decides every law'],c:0,e:'A theocracy is defined by the central role of religion in government authority or law.'},
+ {topic:'COUNTRY EXAMPLES',q:'Which country is commonly described as a theocracy because religious authorities have major constitutional power?',a:['Iceland','Iran','Japan','New Zealand'],c:1,e:'Iran is commonly described as a theocratic republic because religious institutions and leaders hold significant power alongside elected institutions.'},
+ {topic:'COUNTRY COMPARISON',q:'Which country is an example of a state with an official established church, but is not usually classified as a theocracy?',a:['Denmark','Iran','Vatican City','Saudi Arabia'],c:0,e:'Denmark has an established Evangelical Lutheran church, but its government is a constitutional monarchy and parliamentary democracy. An official religion alone does not automatically make a country a theocracy.'}
+];
+let order=[], index=0, score=0, selected=[], locked=false;
+const $=id=>document.getElementById(id);
+function shuffle(arr){const out=[...arr];for(let i=out.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]];}return out;}
+function start(){order=shuffle(questions.map((_,i)=>i));index=0;score=0;selected=[];$('start').classList.add('hidden');$('result').classList.add('hidden');$('review').classList.add('hidden');$('quiz').classList.remove('hidden');render();}
+function render(){locked=false;const q=questions[order[index]];$('qCount').textContent=`QUESTION ${index+1} OF ${questions.length}`;$('scoreNow').textContent=`⭐ ${score} points`;$('progress').style.width=`${index/questions.length*100}%`;$('topic').textContent=q.topic;$('questionText').textContent=q.q;$('feedback').className='feedback';$('feedback').textContent='';$('nextBtn').classList.add('hidden');$('answers').innerHTML='';q.a.forEach((answer,i)=>{const b=document.createElement('button');b.className='answer';b.innerHTML=`<span class="letter">${String.fromCharCode(65+i)}</span><span></span>`;b.querySelector('span:last-child').textContent=answer;b.addEventListener('click',()=>choose(i));$('answers').appendChild(b);});}
+function choose(choice){if(locked)return;locked=true;const q=questions[order[index]], correct=choice===q.c;if(correct)score+=10;selected[index]={question:order[index],choice,correct};[...$('answers').children].forEach((b,i)=>{b.disabled=true;if(i===q.c)b.classList.add('correct');if(i===choice&&!correct)b.classList.add('wrong');});$('scoreNow').textContent=`⭐ ${score} points`;$('progress').style.width=`${(index+1)/questions.length*100}%`;$('feedback').className='feedback show '+(correct?'good':'bad');$('feedback').innerHTML=`<b>${correct?'🎉 Correct! +10 points':'💡 Not quite!'}</b><br>${q.e}`;$('nextBtn').classList.remove('hidden');$('nextBtn').textContent=index===questions.length-1?'See my score →':'Next question →';}
+function next(){if(!locked)return;if(index<questions.length-1){index++;render();}else finish();}
+function finish(){$('quiz').classList.add('hidden');$('result').classList.remove('hidden');$('finalScore').textContent=`${score}/100`;$('resultTitle').textContent=score===100?'Perfect score!':score>=70?'Excellent exploring!':'Quest complete!';$('resultBadge').textContent=score>=80?'THEOCRACY EXPERT':score>=50?'CURIOUS LEARNER':'RISING EXPLORER';$('resultText').textContent=score>=80?'Amazing work! You understand the key ideas about theocracy.':score>=50?'Nice effort! Read the explanations and play again to boost your score.':'Good try! Review the key facts, then play again. You can improve with practice.';}
+function review(){ $('result').classList.add('hidden');$('review').classList.remove('hidden');$('reviewList').innerHTML='';selected.forEach((s,i)=>{const q=questions[s.question];const box=document.createElement('div');box.style.cssText='padding:14px 0;border-bottom:1px solid color-mix(in srgb, var(--site-on-background) 14%, transparent);line-height:1.55';const h=document.createElement('b');h.textContent=`${i+1}. ${q.q}`;const p=document.createElement('p');p.style.margin='8px 0';p.textContent=`Your answer: ${q.a[s.choice]} ${s.correct?'✓':'✗'} · Correct answer: ${q.a[q.c]}`;const e=document.createElement('div');e.style.opacity='.8';e.textContent=q.e;box.append(h,p,e);$('reviewList').appendChild(box);});}
+$('startBtn').addEventListener('click',start);$('nextBtn').addEventListener('click',next);$('againBtn').addEventListener('click',start);$('reviewBtn').addEventListener('click',review);$('homeBtn').addEventListener('click',()=>{$('review').classList.add('hidden');$('result').classList.remove('hidden');});
+</script>
+</body>
+</html>
